@@ -1,164 +1,177 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Para Yin 💖</title>
+<meta charset="UTF-8">
+<title>Para Yin 💖</title>
 
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      background: linear-gradient(135deg, #ff758c, #ff7eb3);
-      overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: 'Segoe UI', Arial, sans-serif;
-      color: white;
-      text-align: center;
-    }
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  background: linear-gradient(270deg, #ff758c, #ff7eb3, #ff9a9e);
+  background-size: 600% 600%;
+  animation: fondo 12s ease infinite;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  color: white;
+  text-align: center;
+}
 
-    .card {
-      background: rgba(255,255,255,0.2);
-      backdrop-filter: blur(10px);
-      padding: 35px;
-      border-radius: 25px;
-      max-width: 380px;
-      box-shadow: 0 0 40px rgba(0,0,0,0.3);
-      animation: aparecer 1.8s ease;
-      z-index: 2;
-    }
+@keyframes fondo {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
 
-    @keyframes aparecer {
-      from { opacity: 0; transform: scale(0.8); }
-      to { opacity: 1; transform: scale(1); }
-    }
+.card {
+  background: rgba(255,255,255,0.22);
+  backdrop-filter: blur(12px);
+  padding: 35px;
+  border-radius: 28px;
+  max-width: 390px;
+  box-shadow: 0 0 50px rgba(0,0,0,0.35);
+  animation: aparecer 1.8s ease;
+  z-index: 2;
+}
 
-    h1 {
-      font-size: 2.2em;
-      margin-bottom: 10px;
-    }
+@keyframes aparecer {
+  from { opacity: 0; transform: scale(0.7); }
+  to { opacity: 1; transform: scale(1); }
+}
 
-    h2 {
-      font-size: 1.3em;
-      margin-bottom: 15px;
-    }
+.heart {
+  font-size: 4.8em;
+  animation: latido 1.1s infinite;
+}
 
-    p {
-      font-size: 1.05em;
-      line-height: 1.6;
-    }
+@keyframes latido {
+  0%,100% { transform: scale(1); }
+  50% { transform: scale(1.4); }
+}
 
-    .heart {
-      font-size: 4.5em;
-      animation: beat 1.2s infinite;
-    }
+button {
+  margin: 12px;
+  padding: 14px 30px;
+  border: none;
+  border-radius: 30px;
+  font-size: 1em;
+  font-weight: bold;
+  cursor: pointer;
+}
 
-    @keyframes beat {
-      0%,100% { transform: scale(1); }
-      50% { transform: scale(1.35); }
-    }
+.btn-si {
+  background: white;
+  color: #ff4d6d;
+}
 
-    button {
-      margin-top: 25px;
-      padding: 14px 30px;
-      border: none;
-      border-radius: 30px;
-      font-size: 1em;
-      font-weight: bold;
-      background: white;
-      color: #ff4d6d;
-      cursor: pointer;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.25);
-    }
+.btn-no {
+  background: #444;
+  color: white;
+}
 
-    button:hover {
-      background: #ffe6ec;
-    }
+.floating-heart {
+  position: absolute;
+  animation: flotar 7s linear infinite;
+  opacity: 0.85;
+}
 
-    .floating-heart {
-      position: absolute;
-      font-size: 20px;
-      animation: subir 8s linear infinite;
-      opacity: 0.8;
-    }
-
-    @keyframes subir {
-      from { transform: translateY(100vh); opacity: 1; }
-      to { transform: translateY(-10vh); opacity: 0; }
-    }
-  </style>
+@keyframes flotar {
+  from { transform: translateY(110vh) scale(0.8); }
+  to { transform: translateY(-10vh) scale(1.5); }
+}
+</style>
 </head>
 
 <body>
 
-<audio id="musica" loop>
-  <source src="https://cdn.pixabay.com/audio/2023/02/14/audio_0c1a6c2d92.mp3" type="audio/mpeg">
+<!-- 🎵 Música romántica (autoplay permitido solo en mute) -->
+<audio id="musica" autoplay loop muted>
+  <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_4b6c6d82b4.mp3" type="audio/mpeg">
 </audio>
 
-<div class="card">
+<div class="card" id="card">
   <div class="heart">❤️</div>
   <h1>Yin, amor de mi vida</h1>
   <h2>¿Quieres ser mi San Valentín?</h2>
 
   <p>
-    Desde el primer día que llegaste a mi vida,  
-    todo cambió para mejor.  
-    Tu sonrisa ilumina mis días  
-    y tu amor da sentido a cada latido de mi corazón.
+    Desde que llegaste a mi vida, todo cambió.  
+    Mis días son más brillantes,  
+    mis noches más tranquilas  
+    y mi corazón encontró su hogar.
     <br><br>
-    No hay palabras suficientes para describir  
-    lo mucho que significas para mí.
+    Hoy quiero que sepas que  
+    cada latido lleva tu nombre.
   </p>
 
-  <button onclick="reproducirTodo()">Escúchalo 💕</button>
+  <button class="btn-si" onclick="respuestaSi()">Sí 💖</button>
+  <button class="btn-no" onclick="respuestaNo()">No 💔</button>
 </div>
 
 <script>
-  // corazones flotando
-  setInterval(() => {
-    const h = document.createElement("div");
-    h.className = "floating-heart";
-    h.innerText = "❤️";
-    h.style.left = Math.random() * 100 + "vw";
-    h.style.fontSize = (15 + Math.random() * 25) + "px";
-    document.body.appendChild(h);
-    setTimeout(() => h.remove(), 8000);
-  }, 500);
+// 🎶 activar sonido real al interactuar
+function activarAudio() {
+  const musica = document.getElementById("musica");
+  musica.muted = false;
+  musica.volume = 0.5;
+  musica.play().catch(()=>{});
+}
 
-  function reproducirTodo() {
-    // música
-    const musica = document.getElementById("musica");
-    musica.volume = 0.5;
-    musica.play().catch(() => {});
+// 🗣️ voz
+function hablar(texto) {
+  activarAudio();
 
-    // voz (esperar voces)
-    const texto = `
-    Yin, amor de mi vida.
-    ¿Quieres ser mi San Valentín?
-    Gracias por existir,
-    por llenar mis días de amor,
-    y por ser la persona más especial de mi vida.
-    Te amo con todo mi corazón.
-    `;
+  const msg = new SpeechSynthesisUtterance(texto);
+  msg.lang = "es-ES";
+  msg.rate = 0.9;
+  msg.pitch = 1.1;
 
-    const mensaje = new SpeechSynthesisUtterance(texto);
-    mensaje.lang = "es-ES";
-    mensaje.rate = 0.9;
-    mensaje.pitch = 1.1;
+  const voces = speechSynthesis.getVoices();
+  msg.voice = voces.find(v => v.lang.startsWith("es")) || voces[0];
+  speechSynthesis.speak(msg);
+}
 
-    const voces = speechSynthesis.getVoices();
-    if (voces.length > 0) {
-      mensaje.voice = voces.find(v => v.lang.startsWith("es")) || voces[0];
-      speechSynthesis.speak(mensaje);
-    } else {
-      speechSynthesis.onvoiceschanged = () => {
-        const vs = speechSynthesis.getVoices();
-        mensaje.voice = vs.find(v => v.lang.startsWith("es")) || vs[0];
-        speechSynthesis.speak(mensaje);
-      };
-    }
-  }
+// ❤️ corazones
+setInterval(() => {
+  const h = document.createElement("div");
+  h.className = "floating-heart";
+  h.innerText = "❤️";
+  h.style.left = Math.random() * 100 + "vw";
+  h.style.fontSize = (18 + Math.random() * 28) + "px";
+  document.body.appendChild(h);
+  setTimeout(() => h.remove(), 7000);
+}, 450);
+
+function respuestaSi() {
+  hablar("Yin, gracias por decir que sí. Te amo con todo mi corazón.");
+  document.getElementById("card").innerHTML = `
+    <div class="heart">💖</div>
+    <h1>¡Dijiste que sí! 😍</h1>
+    <p>
+      Hiciste mi mundo completo.  
+      Prometo cuidarte, respetarte  
+      y amarte cada día más.
+      <br><br>
+      Te amo, Yin ❤️
+    </p>
+  `;
+}
+
+function respuestaNo() {
+  hablar("Está bien. Gracias por tu sinceridad. Siempre te deseo lo mejor.");
+  document.getElementById("card").innerHTML = `
+    <div class="heart">💔</div>
+    <h1>Lo entiendo…</h1>
+    <p>
+      Gracias por ser sincera.  
+      Mi cariño por ti sigue intacto  
+      y siempre te desearé felicidad.
+    </p>
+  `;
+}
 </script>
 
 </body>
