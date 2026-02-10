@@ -15,7 +15,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: 'Segoe UI', Arial, sans-serif;
+  font-family: Arial, sans-serif;
   color: white;
   text-align: center;
 }
@@ -32,8 +32,8 @@ body {
   padding: 35px;
   border-radius: 28px;
   max-width: 390px;
-  box-shadow: 0 0 50px rgba(0,0,0,0.35);
-  animation: aparecer 1.8s ease;
+  box-shadow: 0 0 40px rgba(0,0,0,0.35);
+  animation: aparecer 1.5s ease;
   z-index: 2;
 }
 
@@ -53,8 +53,8 @@ body {
 }
 
 button {
-  margin: 12px;
-  padding: 14px 30px;
+  margin: 10px;
+  padding: 14px 26px;
   border: none;
   border-radius: 30px;
   font-size: 1em;
@@ -72,6 +72,16 @@ button {
   color: white;
 }
 
+.btn-share {
+  background: #25D366;
+  color: white;
+}
+
+.btn-mail {
+  background: #4285F4;
+  color: white;
+}
+
 .floating-heart {
   position: absolute;
   animation: flotar 7s linear infinite;
@@ -82,13 +92,17 @@ button {
   from { transform: translateY(110vh) scale(0.8); }
   to { transform: translateY(-10vh) scale(1.5); }
 }
+
+.tap {
+  font-size: 0.85em;
+  opacity: 0.85;
+}
 </style>
 </head>
 
 <body>
 
-<!-- 🎵 Música romántica (autoplay permitido solo en mute) -->
-<audio id="musica" autoplay loop muted>
+<audio id="musica" loop>
   <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_4b6c6d82b4.mp3" type="audio/mpeg">
 </audio>
 
@@ -97,44 +111,24 @@ button {
   <h1>Yin, amor de mi vida</h1>
   <h2>¿Quieres ser mi San Valentín?</h2>
 
-  <p>
-    Desde que llegaste a mi vida, todo cambió.  
-    Mis días son más brillantes,  
-    mis noches más tranquilas  
-    y mi corazón encontró su hogar.
-    <br><br>
-    Hoy quiero que sepas que  
-    cada latido lleva tu nombre.
-  </p>
+  <button class="btn-si" onclick="respuesta('SI')">Sí 💖</button>
+  <button class="btn-no" onclick="respuesta('NO')">No 💔</button>
 
-  <button class="btn-si" onclick="respuestaSi()">Sí 💖</button>
-  <button class="btn-no" onclick="respuestaNo()">No 💔</button>
+  <div class="tap">👆 Toca la pantalla para escuchar la música</div>
 </div>
 
 <script>
-// 🎶 activar sonido real al interactuar
-function activarAudio() {
-  const musica = document.getElementById("musica");
-  musica.muted = false;
-  musica.volume = 0.5;
-  musica.play().catch(()=>{});
-}
+const musica = document.getElementById("musica");
 
-// 🗣️ voz
-function hablar(texto) {
-  activarAudio();
+// activar audio en Chrome
+document.addEventListener("click", () => {
+  if (musica.paused) {
+    musica.volume = 0.5;
+    musica.play().catch(()=>{});
+  }
+}, { once: true });
 
-  const msg = new SpeechSynthesisUtterance(texto);
-  msg.lang = "es-ES";
-  msg.rate = 0.9;
-  msg.pitch = 1.1;
-
-  const voces = speechSynthesis.getVoices();
-  msg.voice = voces.find(v => v.lang.startsWith("es")) || voces[0];
-  speechSynthesis.speak(msg);
-}
-
-// ❤️ corazones
+// corazones
 setInterval(() => {
   const h = document.createElement("div");
   h.className = "floating-heart";
@@ -145,31 +139,30 @@ setInterval(() => {
   setTimeout(() => h.remove(), 7000);
 }, 450);
 
-function respuestaSi() {
-  hablar("Yin, gracias por decir que sí. Te amo con todo mi corazón.");
-  document.getElementById("card").innerHTML = `
-    <div class="heart">💖</div>
-    <h1>¡Dijiste que sí! 😍</h1>
-    <p>
-      Hiciste mi mundo completo.  
-      Prometo cuidarte, respetarte  
-      y amarte cada día más.
-      <br><br>
-      Te amo, Yin ❤️
-    </p>
-  `;
-}
+function respuesta(opcion) {
+  const mensaje = opcion === "SI"
+    ? "Yin respondió que SÍ ❤️"
+    : "Yin respondió que NO 💔";
 
-function respuestaNo() {
-  hablar("Está bien. Gracias por tu sinceridad. Siempre te deseo lo mejor.");
+  const whatsappURL =
+    "https://wa.me/51930246091?text=" + encodeURIComponent(mensaje);
+
+  const mailURL =
+    "mailto:ortizjampier@gmail.com?subject=Respuesta San Valentín&body=" +
+    encodeURIComponent(mensaje);
+
   document.getElementById("card").innerHTML = `
-    <div class="heart">💔</div>
-    <h1>Lo entiendo…</h1>
-    <p>
-      Gracias por ser sincera.  
-      Mi cariño por ti sigue intacto  
-      y siempre te desearé felicidad.
-    </p>
+    <div class="heart">${opcion === "SI" ? "💖" : "💔"}</div>
+    <h1>Respuesta enviada</h1>
+    <p>${mensaje}</p>
+
+    <a href="${whatsappURL}" target="_blank">
+      <button class="btn-share">Compartir por WhatsApp 📲</button>
+    </a>
+
+    <a href="${mailURL}">
+      <button class="btn-mail">Enviar por Correo ✉️</button>
+    </a>
   `;
 }
 </script>
