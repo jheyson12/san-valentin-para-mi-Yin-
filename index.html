@@ -2,102 +2,119 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Para Yin 💖</title>
+<title>Una carta para ti 💖</title>
 
 <style>
 body {
   margin: 0;
   height: 100vh;
-  background: linear-gradient(270deg, #ff758c, #ff7eb3, #ff9a9e);
-  background-size: 600% 600%;
-  animation: fondo 12s ease infinite;
+  background: linear-gradient(135deg, #ff758c, #ff7eb3);
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: 'Segoe UI', Arial, sans-serif;
-  color: #444;
+  font-family: 'Segoe UI', sans-serif;
   overflow: hidden;
 }
 
-@keyframes fondo {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+/* 🎵 Botón música */
+.music-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  background: #ff4d6d;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4em;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+  z-index: 10;
 }
 
-/* 💌 SOBRE */
+/* 💌 Sobre */
 .envelope {
-  position: relative;
-  width: 320px;
-  height: 220px;
-  background: #ff4d6d;
+  width: 340px;
+  height: 230px;
+  background: #fff;
   border-radius: 12px;
+  position: relative;
   cursor: pointer;
   box-shadow: 0 15px 40px rgba(0,0,0,0.35);
+  overflow: hidden;
+  transition: transform 0.8s;
 }
 
-.envelope::before {
-  content: "";
+.envelope:hover {
+  transform: scale(1.02);
+}
+
+/* Tapa */
+.flap {
   position: absolute;
   top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, transparent 50%, #ff6f91 50%);
-  border-radius: 12px;
+  background: #ff4d6d;
+  clip-path: polygon(0 0, 100% 0, 50% 55%);
+  transform-origin: top;
+  transition: transform 1s ease;
+  z-index: 3;
 }
 
-.envelope .label {
-  position: absolute;
-  bottom: 15px;
-  width: 100%;
-  text-align: center;
-  color: white;
-  font-weight: bold;
-  font-size: 1.1em;
-}
-
-/* 💌 CARTA */
+/* Carta */
 .letter {
   position: absolute;
-  top: 15px;
-  left: 15px;
-  width: 290px;
-  height: 190px;
-  background: #fff;
-  border-radius: 10px;
-  padding: 18px;
+  bottom: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  height: 90%;
+  background: rgba(255,255,255,0.95);
+  border-radius: 16px;
+  padding: 25px;
   box-sizing: border-box;
-  transform: translateY(80px);
-  transition: transform 1s ease;
-  overflow-y: auto;
+  text-align: center;
+  transition: bottom 1s ease;
+  z-index: 2;
+}
+
+/* Abierto */
+.envelope.open .flap {
+  transform: rotateX(180deg);
 }
 
 .envelope.open .letter {
-  transform: translateY(-140px);
+  bottom: 5%;
 }
 
-.letter h2 {
-  margin-top: 0;
-  color: #ff4d6d;
+/* Contenido */
+.heart {
+  font-size: 3.5em;
+  animation: latido 1.2s infinite;
 }
 
-.letter p {
-  font-size: 0.95em;
-  line-height: 1.4em;
+@keyframes latido {
+  0%,100% { transform: scale(1); }
+  50% { transform: scale(1.3); }
 }
+
+h1 { color: #ff4d6d; margin: 10px 0; }
+p { color: #444; line-height: 1.5; }
 
 .buttons {
-  margin-top: 12px;
-  text-align: center;
+  margin-top: 15px;
 }
 
 button {
-  margin: 6px;
-  padding: 10px 18px;
+  padding: 12px 22px;
   border: none;
-  border-radius: 20px;
-  font-weight: bold;
+  border-radius: 30px;
+  font-size: 1em;
+  margin: 6px;
   cursor: pointer;
 }
 
@@ -107,75 +124,63 @@ button {
 }
 
 .btn-no {
-  background: #777;
+  background: #555;
   color: white;
 }
 
-/* 🎵 BOTÓN MÚSICA */
-.music-btn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 62px;
-  height: 62px;
-  background: #ff4d6d;
-  color: white;
-  border-radius: 50%;
-  font-size: 1.5em;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 9999;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.45);
+/* Resultado */
+.result {
+  display: none;
+  font-size: 1.4em;
+  color: #ff4d6d;
+  margin-top: 20px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- 🎵 AUDIO (solo con botón, Chrome OK) -->
+<!-- 🎵 Audio -->
 <audio id="musica">
   <source src="https://cdn.pixabay.com/audio/2022/02/23/audio_54d40fd5a1.mp3" type="audio/mpeg">
 </audio>
 
-<!-- 🎵 BOTÓN -->
 <div class="music-btn" id="musicBtn">🎵</div>
 
-<!-- 💌 SOBRE -->
+<!-- 💌 Carta -->
 <div class="envelope" id="envelope">
-  <div class="letter" id="letter">
-    <h2>Para Yin 💖</h2>
+  <div class="flap"></div>
+
+  <div class="letter">
+    <div class="heart">❤️</div>
+    <h1>Para Yin</h1>
     <p>
-      Desde que llegaste a mi vida,  
-      todo se volvió más bonito.  
-      Tu sonrisa ilumina mis días  
-      y tu presencia calma mi corazón.
-      <br><br>
-      Hoy quiero preguntarte algo  
-      que nace desde lo más profundo de mí…
+      Desde que llegaste, mis días tienen más color,  
+      mis sonrisas más sentido  
+      y mi corazón un motivo más para latir.
     </p>
 
-    <h3>¿Quieres ser mi San Valentín? 💘</h3>
+    <h3>¿Quieres ser mi San Valentín? 💖</h3>
 
     <div class="buttons">
-      <button class="btn-si" onclick="responder('SI')">Sí 💖</button>
-      <button class="btn-no" onclick="responder('NO')">No 💔</button>
+      <button class="btn-si" onclick="respuesta(true)">Sí 💘</button>
+      <button class="btn-no" onclick="respuesta(false)">No 💔</button>
     </div>
-  </div>
 
-  <div class="label">💌 Toca para abrir la carta</div>
+    <div class="result" id="resultado"></div>
+  </div>
 </div>
 
 <script>
 const envelope = document.getElementById("envelope");
 const musica = document.getElementById("musica");
 const musicBtn = document.getElementById("musicBtn");
+const resultado = document.getElementById("resultado");
 
 let abierta = false;
-let reproduciendo = false;
+let tocando = false;
 
-// 💌 abrir carta
+/* Abrir / cerrar carta */
 envelope.addEventListener("click", () => {
   if (!abierta) {
     envelope.classList.add("open");
@@ -183,41 +188,34 @@ envelope.addEventListener("click", () => {
   }
 });
 
-// 🎵 música (FORMA CORRECTA EN CHROME)
+/* Música */
 musicBtn.addEventListener("click", () => {
-  if (!reproduciendo) {
+  if (!tocando) {
     musica.volume = 0.6;
-    musica.play().then(() => {
-      reproduciendo = true;
-      musicBtn.innerText = "⏸️";
-    }).catch(()=>{});
+    musica.play();
+    tocando = true;
+    musicBtn.innerText = "⏸️";
   } else {
     musica.pause();
-    reproduciendo = false;
+    tocando = false;
     musicBtn.innerText = "🎵";
   }
 });
 
-// 🗣️ voz
-function hablar(texto) {
-  const msg = new SpeechSynthesisUtterance(texto);
-  msg.lang = "es-ES";
-  msg.rate = 0.9;
-  msg.pitch = 1.1;
-  speechSynthesis.speak(msg);
-}
+/* Respuesta */
+function respuesta(si) {
+  document.querySelector(".buttons").style.display = "none";
+  resultado.style.display = "block";
 
-function responder(opcion) {
-  const mensaje = opcion === "SI"
-    ? "Yin dijo que sí. Gracias por hacerme muy feliz."
-    : "Yin dijo que no. Gracias por tu sinceridad.";
+  if (si) {
+    resultado.innerHTML = "💖 Sabía que dirías que sí 💖<br>Gracias por hacerme feliz";
+  } else {
+    resultado.innerHTML = "💔 Aun así, gracias por leer mi carta 💔";
+  }
 
-  hablar(mensaje);
-
-  document.getElementById("letter").innerHTML = `
-    <h2>${opcion === "SI" ? "💖 Gracias 💖" : "🤍 Gracias 🤍"}</h2>
-    <p>${mensaje}</p>
-  `;
+  setTimeout(() => {
+    envelope.classList.remove("open");
+  }, 2500);
 }
 </script>
 
