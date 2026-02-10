@@ -72,33 +72,23 @@ button {
   opacity: 0.85;
 }
 
-.floating-heart {
-  position: absolute;
-  animation: flotar 7s linear infinite;
-  opacity: 0.85;
-}
-
-@keyframes flotar {
-  from { transform: translateY(110vh) scale(0.8); }
-  to { transform: translateY(-10vh) scale(1.5); }
-}
-
-/* 🎵 botón música */
+/* 🎵 BOTÓN MÚSICA — CORREGIDO */
 .music-btn {
   position: fixed;
-  bottom: 18px;
-  right: 18px;
-  background: rgba(0,0,0,0.45);
+  bottom: 20px;
+  right: 20px;
+  width: 62px;
+  height: 62px;
+  background: #ff4d6d;
   color: white;
   border-radius: 50%;
-  width: 56px;
-  height: 56px;
-  font-size: 1.4em;
+  font-size: 1.6em;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 5;
+  z-index: 9999; /* 🔥 clave */
+  box-shadow: 0 6px 20px rgba(0,0,0,0.45);
 }
 </style>
 </head>
@@ -110,7 +100,7 @@ button {
   <source src="https://cdn.pixabay.com/audio/2022/02/23/audio_54d40fd5a1.mp3" type="audio/mpeg">
 </audio>
 
-<!-- 🔘 botón play / pause -->
+<!-- 🔘 BOTÓN PLAY / PAUSE -->
 <div class="music-btn" id="musicBtn" onclick="toggleMusic()">▶️</div>
 
 <div class="card" id="card">
@@ -129,45 +119,24 @@ button {
   <button class="btn-si" onclick="responder('SI')">Sí 💘</button>
   <button class="btn-no" onclick="responder('NO')">No 💔</button>
 
-  <div class="tap">👆 Toca la pantalla o el botón ▶️ para escuchar la música</div>
+  <div class="tap">👆 Toca ▶️ para escuchar la música</div>
 </div>
 
 <script>
 const musica = document.getElementById("musica");
 const musicBtn = document.getElementById("musicBtn");
 
-// 🔑 primer gesto (Chrome)
-document.addEventListener("click", () => {
-  if (musica.paused) {
-    musica.volume = 0.5;
-    musica.play().then(()=>{
-      musicBtn.innerText = "⏸️";
-    }).catch(()=>{});
-  }
-}, { once: true });
-
-// ▶️⏸️ toggle
 function toggleMusic() {
   if (musica.paused) {
     musica.volume = 0.5;
-    musica.play();
-    musicBtn.innerText = "⏸️";
+    musica.play().then(() => {
+      musicBtn.innerText = "⏸️";
+    }).catch(()=>{});
   } else {
     musica.pause();
     musicBtn.innerText = "▶️";
   }
 }
-
-// ❤️ corazones
-setInterval(() => {
-  const h = document.createElement("div");
-  h.className = "floating-heart";
-  h.innerText = "❤️";
-  h.style.left = Math.random() * 100 + "vw";
-  h.style.fontSize = (18 + Math.random() * 28) + "px";
-  document.body.appendChild(h);
-  setTimeout(() => h.remove(), 7000);
-}, 450);
 
 // 🗣️ voz
 function hablar(texto) {
