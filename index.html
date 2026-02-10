@@ -82,29 +82,46 @@ button {
   from { transform: translateY(110vh) scale(0.8); }
   to { transform: translateY(-10vh) scale(1.5); }
 }
+
+/* 🎵 botón música */
+.music-btn {
+  position: fixed;
+  bottom: 18px;
+  right: 18px;
+  background: rgba(0,0,0,0.45);
+  color: white;
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  font-size: 1.4em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 5;
+}
 </style>
 </head>
 
 <body>
 
-<!-- 🎵 Música romántica (Chrome compatible) -->
+<!-- 🎵 Música romántica -->
 <audio id="musica" loop>
   <source src="https://cdn.pixabay.com/audio/2022/02/23/audio_54d40fd5a1.mp3" type="audio/mpeg">
 </audio>
 
+<!-- 🔘 botón play / pause -->
+<div class="music-btn" id="musicBtn" onclick="toggleMusic()">▶️</div>
+
 <div class="card" id="card">
   <div class="heart">❤️</div>
   <h1>Yin 💕</h1>
-  <h3>Desde que llegaste a mi vida</h3>
 
   <p>
-    Todo se volvió más bonito.  
-    Tu sonrisa ilumina mis días,  
-    tu voz calma mi corazón  
-    y tu presencia le da sentido a todo.
-    <br><br>
-    Hoy quiero preguntarte algo  
-    que nace desde lo más profundo de mí…
+    Desde que llegaste a mi vida  
+    todo se volvió más bonito.  
+    Tu sonrisa ilumina mis días  
+    y tu presencia calma mi corazón.
   </p>
 
   <h2>¿Quieres ser mi San Valentín? 💖</h2>
@@ -112,21 +129,36 @@ button {
   <button class="btn-si" onclick="responder('SI')">Sí 💘</button>
   <button class="btn-no" onclick="responder('NO')">No 💔</button>
 
-  <div class="tap">👆 Toca la pantalla para escuchar la música</div>
+  <div class="tap">👆 Toca la pantalla o el botón ▶️ para escuchar la música</div>
 </div>
 
 <script>
 const musica = document.getElementById("musica");
+const musicBtn = document.getElementById("musicBtn");
 
-// 🔊 activar música (obligatorio para Chrome)
+// 🔑 primer gesto (Chrome)
 document.addEventListener("click", () => {
   if (musica.paused) {
     musica.volume = 0.5;
-    musica.play().catch(()=>{});
+    musica.play().then(()=>{
+      musicBtn.innerText = "⏸️";
+    }).catch(()=>{});
   }
 }, { once: true });
 
-// ❤️ corazones flotando
+// ▶️⏸️ toggle
+function toggleMusic() {
+  if (musica.paused) {
+    musica.volume = 0.5;
+    musica.play();
+    musicBtn.innerText = "⏸️";
+  } else {
+    musica.pause();
+    musicBtn.innerText = "▶️";
+  }
+}
+
+// ❤️ corazones
 setInterval(() => {
   const h = document.createElement("div");
   h.className = "floating-heart";
@@ -137,7 +169,7 @@ setInterval(() => {
   setTimeout(() => h.remove(), 7000);
 }, 450);
 
-// 🗣️ voz romántica
+// 🗣️ voz
 function hablar(texto) {
   const msg = new SpeechSynthesisUtterance(texto);
   msg.lang = "es-ES";
@@ -148,8 +180,8 @@ function hablar(texto) {
 
 function responder(opcion) {
   const mensaje = opcion === "SI"
-    ? "Yin dijo que sí. Gracias por hacerme la persona más feliz del mundo."
-    : "Yin dijo que no. Gracias por tu sinceridad y por lo bonito compartido.";
+    ? "Yin dijo que sí. Gracias por hacerme muy feliz."
+    : "Yin dijo que no. Gracias por tu sinceridad.";
 
   hablar(mensaje);
 
@@ -163,12 +195,6 @@ function responder(opcion) {
   document.getElementById("card").innerHTML = `
     <div class="heart">${opcion === "SI" ? "💖" : "💔"}</div>
     <h1>${opcion === "SI" ? "¡Gracias por decir que sí!" : "Gracias por responder"}</h1>
-
-    <p>
-      ${opcion === "SI"
-        ? "Prometo cuidarte, respetarte y amarte cada día un poquito más ❤️"
-        : "Siempre te deseo lo mejor, con cariño y respeto 🤍"}
-    </p>
 
     <a href="${whatsapp}" target="_blank">
       <button class="btn-share">Enviar por WhatsApp 📲</button>
