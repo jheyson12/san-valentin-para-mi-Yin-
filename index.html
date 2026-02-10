@@ -15,7 +15,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', Arial, sans-serif;
   color: white;
   text-align: center;
 }
@@ -62,24 +62,14 @@ button {
   cursor: pointer;
 }
 
-.btn-si {
-  background: white;
-  color: #ff4d6d;
-}
+.btn-si { background: white; color: #ff4d6d; }
+.btn-no { background: #444; color: white; }
+.btn-share { background: #25D366; color: white; }
+.btn-mail { background: #4285F4; color: white; }
 
-.btn-no {
-  background: #444;
-  color: white;
-}
-
-.btn-share {
-  background: #25D366;
-  color: white;
-}
-
-.btn-mail {
-  background: #4285F4;
-  color: white;
+.tap {
+  font-size: 0.85em;
+  opacity: 0.85;
 }
 
 .floating-heart {
@@ -92,27 +82,35 @@ button {
   from { transform: translateY(110vh) scale(0.8); }
   to { transform: translateY(-10vh) scale(1.5); }
 }
-
-.tap {
-  font-size: 0.85em;
-  opacity: 0.85;
-}
 </style>
 </head>
 
 <body>
 
+<!-- 🎵 Música romántica (Chrome compatible) -->
 <audio id="musica" loop>
-  <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_4b6c6d82b4.mp3" type="audio/mpeg">
+  <source src="https://cdn.pixabay.com/audio/2022/02/23/audio_54d40fd5a1.mp3" type="audio/mpeg">
 </audio>
 
 <div class="card" id="card">
   <div class="heart">❤️</div>
-  <h1>Yin, amor de mi vida</h1>
-  <h2>¿Quieres ser mi San Valentín?</h2>
+  <h1>Yin 💕</h1>
+  <h3>Desde que llegaste a mi vida</h3>
 
-  <button class="btn-si" onclick="respuesta('SI')">Sí 💖</button>
-  <button class="btn-no" onclick="respuesta('NO')">No 💔</button>
+  <p>
+    Todo se volvió más bonito.  
+    Tu sonrisa ilumina mis días,  
+    tu voz calma mi corazón  
+    y tu presencia le da sentido a todo.
+    <br><br>
+    Hoy quiero preguntarte algo  
+    que nace desde lo más profundo de mí…
+  </p>
+
+  <h2>¿Quieres ser mi San Valentín? 💖</h2>
+
+  <button class="btn-si" onclick="responder('SI')">Sí 💘</button>
+  <button class="btn-no" onclick="responder('NO')">No 💔</button>
 
   <div class="tap">👆 Toca la pantalla para escuchar la música</div>
 </div>
@@ -120,7 +118,7 @@ button {
 <script>
 const musica = document.getElementById("musica");
 
-// activar audio en Chrome
+// 🔊 activar música (obligatorio para Chrome)
 document.addEventListener("click", () => {
   if (musica.paused) {
     musica.volume = 0.5;
@@ -128,7 +126,7 @@ document.addEventListener("click", () => {
   }
 }, { once: true });
 
-// corazones
+// ❤️ corazones flotando
 setInterval(() => {
   const h = document.createElement("div");
   h.className = "floating-heart";
@@ -139,28 +137,44 @@ setInterval(() => {
   setTimeout(() => h.remove(), 7000);
 }, 450);
 
-function respuesta(opcion) {
-  const mensaje = opcion === "SI"
-    ? "Yin respondió que SÍ ❤️"
-    : "Yin respondió que NO 💔";
+// 🗣️ voz romántica
+function hablar(texto) {
+  const msg = new SpeechSynthesisUtterance(texto);
+  msg.lang = "es-ES";
+  msg.rate = 0.9;
+  msg.pitch = 1.1;
+  speechSynthesis.speak(msg);
+}
 
-  const whatsappURL =
+function responder(opcion) {
+  const mensaje = opcion === "SI"
+    ? "Yin dijo que sí. Gracias por hacerme la persona más feliz del mundo."
+    : "Yin dijo que no. Gracias por tu sinceridad y por lo bonito compartido.";
+
+  hablar(mensaje);
+
+  const whatsapp =
     "https://wa.me/51930246091?text=" + encodeURIComponent(mensaje);
 
-  const mailURL =
-    "mailto:ortizjampier@gmail.com?subject=Respuesta San Valentín&body=" +
+  const correo =
+    "mailto:ortizjampier@gmail.com?subject=Respuesta San Valentín 💖&body=" +
     encodeURIComponent(mensaje);
 
   document.getElementById("card").innerHTML = `
     <div class="heart">${opcion === "SI" ? "💖" : "💔"}</div>
-    <h1>Respuesta enviada</h1>
-    <p>${mensaje}</p>
+    <h1>${opcion === "SI" ? "¡Gracias por decir que sí!" : "Gracias por responder"}</h1>
 
-    <a href="${whatsappURL}" target="_blank">
-      <button class="btn-share">Compartir por WhatsApp 📲</button>
+    <p>
+      ${opcion === "SI"
+        ? "Prometo cuidarte, respetarte y amarte cada día un poquito más ❤️"
+        : "Siempre te deseo lo mejor, con cariño y respeto 🤍"}
+    </p>
+
+    <a href="${whatsapp}" target="_blank">
+      <button class="btn-share">Enviar por WhatsApp 📲</button>
     </a>
 
-    <a href="${mailURL}">
+    <a href="${correo}">
       <button class="btn-mail">Enviar por Correo ✉️</button>
     </a>
   `;
