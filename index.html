@@ -64,30 +64,22 @@ button {
 
 .btn-si { background: white; color: #ff4d6d; }
 .btn-no { background: #444; color: white; }
-.btn-share { background: #25D366; color: white; }
-.btn-mail { background: #4285F4; color: white; }
 
-.tap {
-  font-size: 0.85em;
-  opacity: 0.85;
-}
-
-/* 🎵 BOTÓN MÚSICA — CORREGIDO */
 .music-btn {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  width: 62px;
-  height: 62px;
+  width: 64px;
+  height: 64px;
   background: #ff4d6d;
   color: white;
   border-radius: 50%;
-  font-size: 1.6em;
+  font-size: 1.5em;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 9999; /* 🔥 clave */
+  z-index: 9999;
   box-shadow: 0 6px 20px rgba(0,0,0,0.45);
 }
 </style>
@@ -95,15 +87,15 @@ button {
 
 <body>
 
-<!-- 🎵 Música romántica -->
-<audio id="musica" loop>
+<!-- 🎵 AUDIO (SIN autoplay, SIN muted) -->
+<audio id="musica">
   <source src="https://cdn.pixabay.com/audio/2022/02/23/audio_54d40fd5a1.mp3" type="audio/mpeg">
 </audio>
 
-<!-- 🔘 BOTÓN PLAY / PAUSE -->
-<div class="music-btn" id="musicBtn" onclick="toggleMusic()">▶️</div>
+<!-- 🎵 BOTÓN REAL -->
+<div class="music-btn" id="musicBtn">🎵</div>
 
-<div class="card" id="card">
+<div class="card">
   <div class="heart">❤️</div>
   <h1>Yin 💕</h1>
 
@@ -116,64 +108,33 @@ button {
 
   <h2>¿Quieres ser mi San Valentín? 💖</h2>
 
-  <button class="btn-si" onclick="responder('SI')">Sí 💘</button>
-  <button class="btn-no" onclick="responder('NO')">No 💔</button>
-
-  <div class="tap">👆 Toca ▶️ para escuchar la música</div>
+  <button class="btn-si">Sí 💘</button>
+  <button class="btn-no">No 💔</button>
 </div>
 
 <script>
 const musica = document.getElementById("musica");
 const musicBtn = document.getElementById("musicBtn");
 
-function toggleMusic() {
-  if (musica.paused) {
-    musica.volume = 0.5;
+let reproduciendo = false;
+
+// 🎯 ÚNICA forma correcta en Chrome
+musicBtn.addEventListener("click", () => {
+  if (!reproduciendo) {
+    musica.volume = 0.6;
     musica.play().then(() => {
+      reproduciendo = true;
       musicBtn.innerText = "⏸️";
-    }).catch(()=>{});
+    }).catch(err => {
+      alert("Toca nuevamente el botón 🎵");
+      console.log(err);
+    });
   } else {
     musica.pause();
-    musicBtn.innerText = "▶️";
+    reproduciendo = false;
+    musicBtn.innerText = "🎵";
   }
-}
-
-// 🗣️ voz
-function hablar(texto) {
-  const msg = new SpeechSynthesisUtterance(texto);
-  msg.lang = "es-ES";
-  msg.rate = 0.9;
-  msg.pitch = 1.1;
-  speechSynthesis.speak(msg);
-}
-
-function responder(opcion) {
-  const mensaje = opcion === "SI"
-    ? "Yin dijo que sí. Gracias por hacerme muy feliz."
-    : "Yin dijo que no. Gracias por tu sinceridad.";
-
-  hablar(mensaje);
-
-  const whatsapp =
-    "https://wa.me/51930246091?text=" + encodeURIComponent(mensaje);
-
-  const correo =
-    "mailto:ortizjampier@gmail.com?subject=Respuesta San Valentín 💖&body=" +
-    encodeURIComponent(mensaje);
-
-  document.getElementById("card").innerHTML = `
-    <div class="heart">${opcion === "SI" ? "💖" : "💔"}</div>
-    <h1>${opcion === "SI" ? "¡Gracias por decir que sí!" : "Gracias por responder"}</h1>
-
-    <a href="${whatsapp}" target="_blank">
-      <button class="btn-share">Enviar por WhatsApp 📲</button>
-    </a>
-
-    <a href="${correo}">
-      <button class="btn-mail">Enviar por Correo ✉️</button>
-    </a>
-  `;
-}
+});
 </script>
 
 </body>
