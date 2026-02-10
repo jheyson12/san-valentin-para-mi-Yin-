@@ -11,13 +11,12 @@ body {
   background: linear-gradient(270deg, #ff758c, #ff7eb3, #ff9a9e);
   background-size: 600% 600%;
   animation: fondo 12s ease infinite;
-  overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
   font-family: 'Segoe UI', Arial, sans-serif;
-  color: white;
-  text-align: center;
+  color: #444;
+  overflow: hidden;
 }
 
 @keyframes fondo {
@@ -26,51 +25,99 @@ body {
   100% { background-position: 0% 50%; }
 }
 
-.card {
-  background: rgba(255,255,255,0.22);
-  backdrop-filter: blur(12px);
-  padding: 35px;
-  border-radius: 28px;
-  max-width: 390px;
-  box-shadow: 0 0 40px rgba(0,0,0,0.35);
-  animation: aparecer 1.5s ease;
-  z-index: 2;
+/* 💌 SOBRE */
+.envelope {
+  position: relative;
+  width: 320px;
+  height: 220px;
+  background: #ff4d6d;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.35);
 }
 
-@keyframes aparecer {
-  from { opacity: 0; transform: scale(0.7); }
-  to { opacity: 1; transform: scale(1); }
+.envelope::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, transparent 50%, #ff6f91 50%);
+  border-radius: 12px;
 }
 
-.heart {
-  font-size: 4.8em;
-  animation: latido 1.1s infinite;
+.envelope .label {
+  position: absolute;
+  bottom: 15px;
+  width: 100%;
+  text-align: center;
+  color: white;
+  font-weight: bold;
+  font-size: 1.1em;
 }
 
-@keyframes latido {
-  0%,100% { transform: scale(1); }
-  50% { transform: scale(1.4); }
+/* 💌 CARTA */
+.letter {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  width: 290px;
+  height: 190px;
+  background: #fff;
+  border-radius: 10px;
+  padding: 18px;
+  box-sizing: border-box;
+  transform: translateY(80px);
+  transition: transform 1s ease;
+  overflow-y: auto;
+}
+
+.envelope.open .letter {
+  transform: translateY(-140px);
+}
+
+.letter h2 {
+  margin-top: 0;
+  color: #ff4d6d;
+}
+
+.letter p {
+  font-size: 0.95em;
+  line-height: 1.4em;
+}
+
+.buttons {
+  margin-top: 12px;
+  text-align: center;
 }
 
 button {
-  margin: 10px;
-  padding: 14px 26px;
+  margin: 6px;
+  padding: 10px 18px;
   border: none;
-  border-radius: 30px;
-  font-size: 1em;
+  border-radius: 20px;
   font-weight: bold;
   cursor: pointer;
 }
 
-.btn-si { background: white; color: #ff4d6d; }
-.btn-no { background: #444; color: white; }
+.btn-si {
+  background: #ff4d6d;
+  color: white;
+}
 
+.btn-no {
+  background: #777;
+  color: white;
+}
+
+/* 🎵 BOTÓN MÚSICA */
 .music-btn {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  width: 64px;
-  height: 64px;
+  width: 62px;
+  height: 62px;
   background: #ff4d6d;
   color: white;
   border-radius: 50%;
@@ -87,54 +134,91 @@ button {
 
 <body>
 
-<!-- 🎵 AUDIO (SIN autoplay, SIN muted) -->
+<!-- 🎵 AUDIO (solo con botón, Chrome OK) -->
 <audio id="musica">
   <source src="https://cdn.pixabay.com/audio/2022/02/23/audio_54d40fd5a1.mp3" type="audio/mpeg">
 </audio>
 
-<!-- 🎵 BOTÓN REAL -->
+<!-- 🎵 BOTÓN -->
 <div class="music-btn" id="musicBtn">🎵</div>
 
-<div class="card">
-  <div class="heart">❤️</div>
-  <h1>Yin 💕</h1>
+<!-- 💌 SOBRE -->
+<div class="envelope" id="envelope">
+  <div class="letter" id="letter">
+    <h2>Para Yin 💖</h2>
+    <p>
+      Desde que llegaste a mi vida,  
+      todo se volvió más bonito.  
+      Tu sonrisa ilumina mis días  
+      y tu presencia calma mi corazón.
+      <br><br>
+      Hoy quiero preguntarte algo  
+      que nace desde lo más profundo de mí…
+    </p>
 
-  <p>
-    Desde que llegaste a mi vida  
-    todo se volvió más bonito.  
-    Tu sonrisa ilumina mis días  
-    y tu presencia calma mi corazón.
-  </p>
+    <h3>¿Quieres ser mi San Valentín? 💘</h3>
 
-  <h2>¿Quieres ser mi San Valentín? 💖</h2>
+    <div class="buttons">
+      <button class="btn-si" onclick="responder('SI')">Sí 💖</button>
+      <button class="btn-no" onclick="responder('NO')">No 💔</button>
+    </div>
+  </div>
 
-  <button class="btn-si">Sí 💘</button>
-  <button class="btn-no">No 💔</button>
+  <div class="label">💌 Toca para abrir la carta</div>
 </div>
 
 <script>
+const envelope = document.getElementById("envelope");
 const musica = document.getElementById("musica");
 const musicBtn = document.getElementById("musicBtn");
 
+let abierta = false;
 let reproduciendo = false;
 
-// 🎯 ÚNICA forma correcta en Chrome
+// 💌 abrir carta
+envelope.addEventListener("click", () => {
+  if (!abierta) {
+    envelope.classList.add("open");
+    abierta = true;
+  }
+});
+
+// 🎵 música (FORMA CORRECTA EN CHROME)
 musicBtn.addEventListener("click", () => {
   if (!reproduciendo) {
     musica.volume = 0.6;
     musica.play().then(() => {
       reproduciendo = true;
       musicBtn.innerText = "⏸️";
-    }).catch(err => {
-      alert("Toca nuevamente el botón 🎵");
-      console.log(err);
-    });
+    }).catch(()=>{});
   } else {
     musica.pause();
     reproduciendo = false;
     musicBtn.innerText = "🎵";
   }
 });
+
+// 🗣️ voz
+function hablar(texto) {
+  const msg = new SpeechSynthesisUtterance(texto);
+  msg.lang = "es-ES";
+  msg.rate = 0.9;
+  msg.pitch = 1.1;
+  speechSynthesis.speak(msg);
+}
+
+function responder(opcion) {
+  const mensaje = opcion === "SI"
+    ? "Yin dijo que sí. Gracias por hacerme muy feliz."
+    : "Yin dijo que no. Gracias por tu sinceridad.";
+
+  hablar(mensaje);
+
+  document.getElementById("letter").innerHTML = `
+    <h2>${opcion === "SI" ? "💖 Gracias 💖" : "🤍 Gracias 🤍"}</h2>
+    <p>${mensaje}</p>
+  `;
+}
 </script>
 
 </body>
