@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Carta especial 💖</title>
 
 <style>
@@ -47,7 +48,7 @@ body {
   overflow: hidden;
 }
 
-/* Tapa del sobre */
+/* Tapa */
 .flap {
   position: absolute;
   top: 0;
@@ -98,15 +99,8 @@ body {
   50% { transform: scale(1.3); }
 }
 
-h1 {
-  color: #ff4d6d;
-  margin: 10px 0;
-}
-
-p {
-  color: #444;
-  line-height: 1.6;
-}
+h1 { color: #ff4d6d; margin: 10px 0; }
+p { color: #444; line-height: 1.6; }
 
 .question {
   margin-top: 15px;
@@ -115,9 +109,7 @@ p {
   color: #ff4d6d;
 }
 
-.buttons {
-  margin-top: 15px;
-}
+.buttons { margin-top: 15px; }
 
 button {
   padding: 12px 22px;
@@ -128,15 +120,8 @@ button {
   cursor: pointer;
 }
 
-.btn-si {
-  background: #ff4d6d;
-  color: white;
-}
-
-.btn-no {
-  background: #555;
-  color: white;
-}
+.btn-si { background: #ff4d6d; color: white; }
+.btn-no { background: #555; color: white; }
 
 .result {
   display: none;
@@ -150,7 +135,7 @@ button {
 <body>
 
 <!-- 🎵 Música -->
-<audio id="musica">
+<audio id="musica" preload="auto">
   <source src="https://cdn.pixabay.com/audio/2022/02/23/audio_54d40fd5a1.mp3" type="audio/mpeg">
 </audio>
 
@@ -175,8 +160,8 @@ button {
     </div>
 
     <div class="buttons">
-      <button class="btn-si" onclick="responder(true)">Sí 💘</button>
-      <button class="btn-no" onclick="responder(false)">No 💔</button>
+      <button class="btn-si" onclick="responder(true, event)">Sí 💘</button>
+      <button class="btn-no" onclick="responder(false, event)">No 💔</button>
     </div>
 
     <div class="result" id="resultado"></div>
@@ -192,7 +177,7 @@ const resultado = document.getElementById("resultado");
 let abierta = false;
 let tocando = false;
 
-/* Gesto: abrir sobre */
+/* Abrir carta */
 envelope.addEventListener("click", () => {
   if (!abierta) {
     envelope.classList.add("open");
@@ -201,21 +186,24 @@ envelope.addEventListener("click", () => {
 });
 
 /* Música */
-musicBtn.addEventListener("click", () => {
+musicBtn.addEventListener("click", (e) => {
+  e.stopPropagation();
   if (!tocando) {
     musica.volume = 0.6;
     musica.play();
     tocando = true;
-    musicBtn.innerText = "⏸️";
+    musicBtn.textContent = "⏸️";
   } else {
     musica.pause();
     tocando = false;
-    musicBtn.innerText = "🎵";
+    musicBtn.textContent = "🎵";
   }
 });
 
 /* Respuesta */
-function responder(si) {
+function responder(si, event) {
+  event.stopPropagation();
+
   document.querySelector(".buttons").style.display = "none";
   resultado.style.display = "block";
 
