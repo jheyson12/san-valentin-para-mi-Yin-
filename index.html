@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>San Valentín ❤️</title>
+
+<style>
+body{
+margin:0;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,#ff5f6d,#ffc371);
+font-family:Segoe UI,sans-serif;
+}
+.card{
+background:white;
+padding:30px;
+width:330px;
+border-radius:20px;
+text-align:center;
+box-shadow:0 15px 40px rgba(0,0,0,.25);
+}
+.heart{
+font-size:55px;
+animation:latido 1.5s infinite;
+}
+h1{color:#ff3366}
+button{
+margin-top:15px;
+padding:12px 22px;
+border:none;
+border-radius:25px;
+background:#ff3366;
+color:white;
+font-size:15px;
+}
+@keyframes latido{
+0%{transform:scale(1)}
+50%{transform:scale(1.25)}
+100%{transform:scale(1)}
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+<div class="heart">❤️</div>
+<h1>Feliz San Valentín</h1>
+
+<p id="mensaje">
+Desde que llegaste a mi vida,
+todo tiene más sentido.
+Hoy solo quiero preguntarte algo…
+¿Te gustaría ser mi San Valentín?
+</p>
+
+<button onclick="leer()">Escúchalo 💕</button>
+</div>
+
+<script>
+function leer(){
+const texto=document.getElementById("mensaje").innerText;
+const voz=new SpeechSynthesisUtterance(texto);
+voz.lang="es-ES";
+voz.rate=0.9;
+voz.pitch=1.1;
+speechSynthesis.cancel();
+speechSynthesis.speak(voz);
+}
+</script>
+
+</body>
+</html>
