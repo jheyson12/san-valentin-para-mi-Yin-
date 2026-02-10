@@ -27,14 +27,13 @@ body {
   cursor: pointer;
   box-shadow: 0 20px 45px rgba(0,0,0,0.35);
   overflow: hidden;
+  z-index: 1;
 }
 
 /* Tapa */
 .flap {
   position: absolute;
-  top: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   background: #ff4d6d;
   clip-path: polygon(0 0, 100% 0, 50% 60%);
   z-index: 3;
@@ -42,7 +41,7 @@ body {
   transition: transform 1s ease;
 }
 
-/* 📜 Papel */
+/* 📜 Papel (OCULTO AL INICIO) */
 .paper {
   position: absolute;
   bottom: -75%;
@@ -55,18 +54,24 @@ body {
   padding: 25px;
   box-sizing: border-box;
   box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-  transition: bottom 1.2s ease;
+  transition: bottom 1.2s ease, opacity 0.6s ease;
   z-index: 2;
   overflow-y: auto;
+
+  /* 🔒 CLAVE */
+  opacity: 0;
+  pointer-events: none;
 }
 
-/* Abierto */
+/* Estado abierto */
 .envelope.open .flap {
   transform: rotateX(180deg);
 }
 
 .envelope.open .paper {
   bottom: 8%;
+  opacity: 1;
+  pointer-events: auto;
 }
 
 /* Contenido */
@@ -137,14 +142,12 @@ button {
     <h1>Para Yin</h1>
 
     <p id="texto">
-      Desde que llegaste a mi vida, algo cambió.  
-      Los días se sienten más ligeros,  
-      las sonrisas más sinceras  
+      Desde que llegaste a mi vida, algo cambió.
+      Los días se sienten más ligeros,
+      las sonrisas más sinceras
       y el corazón un poco más valiente.
       <br><br>
-      No sé cuándo pasó,  
-      pero hoy sé que me importas  
-      más de lo que imaginé.
+      Hoy solo quiero preguntarte algo importante.
     </p>
 
     <div class="question">
@@ -167,13 +170,11 @@ const resultado = document.getElementById("resultado");
 
 let abierta = false;
 
-/* Voz */
 function hablar(mensaje) {
   speechSynthesis.cancel();
   const voz = new SpeechSynthesisUtterance(mensaje);
   voz.lang = "es-ES";
   voz.rate = 0.95;
-  voz.pitch = 1;
   speechSynthesis.speak(voz);
 }
 
@@ -186,7 +187,7 @@ envelope.addEventListener("click", () => {
   }
 });
 
-/* Responder */
+/* Respuesta */
 function responder(si, event) {
   event.stopPropagation();
 
