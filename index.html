@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Una carta para ti 💖</title>
+<title>Carta especial 💖</title>
 
 <style>
 body {
@@ -26,10 +26,10 @@ body {
   background: #ff4d6d;
   color: white;
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   font-size: 1.4em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
   box-shadow: 0 6px 20px rgba(0,0,0,0.4);
   z-index: 10;
@@ -37,48 +37,44 @@ body {
 
 /* 💌 Sobre */
 .envelope {
-  width: 340px;
+  width: 360px;
   height: 230px;
   background: #fff;
-  border-radius: 12px;
+  border-radius: 14px;
   position: relative;
   cursor: pointer;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.35);
+  box-shadow: 0 20px 45px rgba(0,0,0,0.35);
   overflow: hidden;
-  transition: transform 0.8s;
 }
 
-.envelope:hover {
-  transform: scale(1.02);
-}
-
-/* Tapa */
+/* Tapa del sobre */
 .flap {
   position: absolute;
   top: 0;
   width: 100%;
   height: 100%;
   background: #ff4d6d;
-  clip-path: polygon(0 0, 100% 0, 50% 55%);
-  transform-origin: top;
-  transition: transform 1s ease;
+  clip-path: polygon(0 0, 100% 0, 50% 60%);
   z-index: 3;
+  transform-origin: top;
+  transition: transform 0.9s ease;
 }
 
-/* Carta */
-.letter {
+/* 📜 Papel */
+.paper {
   position: absolute;
-  bottom: -100%;
+  bottom: -70%;
   left: 50%;
   transform: translateX(-50%);
   width: 90%;
-  height: 90%;
-  background: rgba(255,255,255,0.95);
-  border-radius: 16px;
+  height: 85%;
+  background: #fffdf7;
+  border-radius: 18px;
   padding: 25px;
   box-sizing: border-box;
   text-align: center;
-  transition: bottom 1s ease;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  transition: bottom 1.1s ease;
   z-index: 2;
 }
 
@@ -87,13 +83,13 @@ body {
   transform: rotateX(180deg);
 }
 
-.envelope.open .letter {
-  bottom: 5%;
+.envelope.open .paper {
+  bottom: 8%;
 }
 
 /* Contenido */
 .heart {
-  font-size: 3.5em;
+  font-size: 3.8em;
   animation: latido 1.2s infinite;
 }
 
@@ -102,8 +98,22 @@ body {
   50% { transform: scale(1.3); }
 }
 
-h1 { color: #ff4d6d; margin: 10px 0; }
-p { color: #444; line-height: 1.5; }
+h1 {
+  color: #ff4d6d;
+  margin: 10px 0;
+}
+
+p {
+  color: #444;
+  line-height: 1.6;
+}
+
+.question {
+  margin-top: 15px;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #ff4d6d;
+}
 
 .buttons {
   margin-top: 15px;
@@ -128,43 +138,45 @@ button {
   color: white;
 }
 
-/* Resultado */
 .result {
   display: none;
+  margin-top: 20px;
   font-size: 1.4em;
   color: #ff4d6d;
-  margin-top: 20px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- 🎵 Audio -->
+<!-- 🎵 Música -->
 <audio id="musica">
   <source src="https://cdn.pixabay.com/audio/2022/02/23/audio_54d40fd5a1.mp3" type="audio/mpeg">
 </audio>
 
 <div class="music-btn" id="musicBtn">🎵</div>
 
-<!-- 💌 Carta -->
+<!-- 💌 Sobre -->
 <div class="envelope" id="envelope">
   <div class="flap"></div>
 
-  <div class="letter">
+  <div class="paper">
     <div class="heart">❤️</div>
     <h1>Para Yin</h1>
+
     <p>
-      Desde que llegaste, mis días tienen más color,  
-      mis sonrisas más sentido  
-      y mi corazón un motivo más para latir.
+      No sé en qué momento te volviste tan importante,  
+      pero desde que llegaste,  
+      todo se siente más bonito y verdadero.
     </p>
 
-    <h3>¿Quieres ser mi San Valentín? 💖</h3>
+    <div class="question">
+      ¿Quieres ser mi San Valentín? 💖
+    </div>
 
     <div class="buttons">
-      <button class="btn-si" onclick="respuesta(true)">Sí 💘</button>
-      <button class="btn-no" onclick="respuesta(false)">No 💔</button>
+      <button class="btn-si" onclick="responder(true)">Sí 💘</button>
+      <button class="btn-no" onclick="responder(false)">No 💔</button>
     </div>
 
     <div class="result" id="resultado"></div>
@@ -180,7 +192,7 @@ const resultado = document.getElementById("resultado");
 let abierta = false;
 let tocando = false;
 
-/* Abrir / cerrar carta */
+/* Gesto: abrir sobre */
 envelope.addEventListener("click", () => {
   if (!abierta) {
     envelope.classList.add("open");
@@ -203,19 +215,13 @@ musicBtn.addEventListener("click", () => {
 });
 
 /* Respuesta */
-function respuesta(si) {
+function responder(si) {
   document.querySelector(".buttons").style.display = "none";
   resultado.style.display = "block";
 
-  if (si) {
-    resultado.innerHTML = "💖 Sabía que dirías que sí 💖<br>Gracias por hacerme feliz";
-  } else {
-    resultado.innerHTML = "💔 Aun así, gracias por leer mi carta 💔";
-  }
-
-  setTimeout(() => {
-    envelope.classList.remove("open");
-  }, 2500);
+  resultado.innerHTML = si
+    ? "💖 Gracias por hacerme el más feliz 💖"
+    : "💌 Gracias por leer mi carta 💌";
 }
 </script>
 
