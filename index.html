@@ -1,200 +1,59 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Para ti, amor de mi vida 💌</title>
-
-<style>
-body {
-  margin: 0;
-  height: 100vh;
-  background: linear-gradient(#ffdde1, #ee9ca7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: 'Georgia', serif;
-  overflow: hidden;
-}
-
-.card {
-  width: 260px;
-  height: 180px;
-  background: #c0392b;
-  border-radius: 10px;
-  cursor: pointer;
-  position: relative;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-  transition: transform 1s;
-}
-
-.card::before {
-  content: "💌";
-  position: absolute;
-  font-size: 50px;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.card.open {
-  transform: scale(0.8);
-}
-
-.paper {
-  position: absolute;
-  width: 90%;
-  height: 80%;
-  background: #fffaf0;
-  top: 10%;
-  left: 5%;
-  border-radius: 8px;
-  padding: 15px;
-  overflow-y: auto;
-  box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
-  transform: translateY(120%);
-  transition: transform 1s;
-}
-
-.card.open .paper {
-  transform: translateY(-120%);
-}
-
-h2 {
-  text-align: center;
-  color: #c0392b;
-}
-
-.buttons {
-  text-align: center;
-  margin-top: 15px;
-}
-
-button {
-  padding: 10px 18px;
-  margin: 5px;
-  border: none;
-  border-radius: 20px;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.yes { background: #2ecc71; color: white; }
-.no { background: #e74c3c; color: white; }
-
-.share {
-  margin-top: 10px;
-  text-align: center;
-  display: none;
-}
-
-.share a {
-  display: block;
-  margin: 5px;
-  color: #2980b9;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.music-btn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: #e84393;
-  color: white;
-  border-radius: 50%;
-  width: 60px;
-  height: 60px;
-  font-size: 24px;
-}
-</style>
-</head>
-
-<body>
-
-<div class="card" id="card">
-  <div class="paper" id="paper">
-    <h2>Para ti, amor de mi vida 💖</h2>
-    <p>
-      Desde que llegaste a mi vida, todo tiene más sentido.  
-      Tu sonrisa ilumina mis días, tu voz calma mi corazón  
-      y cada momento contigo se vuelve un recuerdo eterno.
-    </p>
-    <p>
-      Hoy quiero preguntarte algo muy especial, con el corazón en la mano…
-    </p>
-    <h3 style="text-align:center;">¿Quieres ser mi San Valentín? 💘</h3>
-
-    <div class="buttons">
-      <button class="yes" onclick="respuesta('Sí')">Sí 💕</button>
-      <button class="no" onclick="respuesta('No')">No 💔</button>
-    </div>
-
-    <div class="share" id="share">
-      <p id="reaction"></p>
-      <a id="wa" target="_blank">📲 Enviar por WhatsApp</a>
-      <a id="mail">📧 Enviar por correo</a>
-    </div>
-  </div>
-</div>
-
-<button class="music-btn" id="musicBtn">🎵</button>
-
-<audio id="music">
-  <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_4b6c6d82b4.mp3" type="audio/mpeg">
-</audio>
-
 <script>
-const card = document.getElementById("card");
-const music = document.getElementById("music");
-const musicBtn = document.getElementById("musicBtn");
+const envelope = document.getElementById("envelope");
+const texto = document.getElementById("texto").innerText;
+const resultado = document.getElementById("resultado");
+const enviar = document.getElementById("enviar");
+const musica = document.getElementById("musica");
 
-card.addEventListener("click", () => {
-  card.classList.add("open");
-  hablar();
-});
+let abierta = false;
+let respuestaTexto = "";
 
-musicBtn.addEventListener("click", () => {
-  if (music.paused) {
-    music.volume = 0.5;
-    music.play();
-    musicBtn.textContent = "⏸️";
-  } else {
-    music.pause();
-    musicBtn.textContent = "🎵";
-  }
-});
-
-function hablar() {
-  const msg = new SpeechSynthesisUtterance(
-    "Hola amor de mi vida. Quiero preguntarte algo muy especial. ¿Quieres ser mi San Valentín?"
-  );
-  msg.lang = "es-ES";
-  msg.rate = 0.9;
-  speechSynthesis.speak(msg);
+function hablar(mensaje) {
+  speechSynthesis.cancel();
+  const voz = new SpeechSynthesisUtterance(mensaje);
+  voz.lang = "es-ES";
+  voz.rate = 0.95;
+  speechSynthesis.speak(voz);
 }
 
-function respuesta(r) {
-  document.getElementById("share").style.display = "block";
-  const reaction = document.getElementById("reaction");
-
-  if (r === "Sí") {
-    reaction.textContent = "Me hiciste la persona más feliz del mundo 💖";
-  } else {
-    reaction.textContent = "Gracias por tu sinceridad, siempre te llevaré en mi corazón 💔";
+/* Abrir carta */
+envelope.addEventListener("click", () => {
+  if (!abierta) {
+    envelope.classList.add("open");
+    abierta = true;
+    musica.volume = 0.3;
+    musica.play();
+    hablar(texto + " ¿Quieres ser mi San Valentín?");
   }
+});
 
-  const texto = encodeURIComponent(
-    "Mi respuesta es: " + r + " 💌"
-  );
+/* Responder */
+function responder(si, event) {
+  event.stopPropagation();
+  document.querySelector(".buttons").style.display = "none";
+  resultado.style.display = "block";
+  enviar.style.display = "block";
 
-  document.getElementById("wa").href =
-    "https://wa.me/51930246091?text=" + texto;
+  respuestaTexto = si
+    ? "💖 Respondió SÍ 💖 Me hiciste muy feliz. 💌"
+    : "💔 Respondió NO 💔 Gracias por leer mi carta.";
 
-  document.getElementById("mail").href =
-    "mailto:ortizjampier@gmail.com?subject=Mi respuesta 💖&body=" + texto;
+  resultado.textContent = respuestaTexto;
+  hablar(respuestaTexto);
+}
+
+/* 📲 WhatsApp */
+function enviarWhatsApp() {
+  const numero = "51930246091"; // ✅ TU NÚMERO REAL
+  const url = `https://wa.me/${numero}?text=${encodeURIComponent(respuestaTexto)}`;
+  window.open(url, "_blank");
+}
+
+/* ✉️ Correo */
+function enviarCorreo() {
+  const subject = "Respuesta a la carta 💖";
+  const body = respuestaTexto;
+  window.location.href =
+    `mailto:ortizjampier@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 </script>
-
-</body>
-</html>
